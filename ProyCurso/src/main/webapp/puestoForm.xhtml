@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head>
+<body>
+	<ui:composition template="/WEB-INF/templates/plantilla.xhtml">
+		<ui:define name="content">
+			<p:messages id="msj" showDetail="false" autoUpdate="true" globalOnly="true"/>
+			<h:form>		
+				<h2>Detalle Puesto #{puestoFormBean.puesto.nombre}</h2>
+				<h:panelGrid columns="4">
+
+					<p:outputLabel for="txtNombre" value="Nombre" />
+					<p:inputText id="txtNombre" value="#{puestoFormBean.puesto.nombre}"
+						required="true" />
+					<p:message for="txtNombre"/>
+					<p:tooltip for="txtNombre" value="Nombre del puesto"/>
+
+					<p:outputLabel for="txtSalario" value="Salario Base" />
+					<p:spinner id="txtSalario"
+						value="#{puestoFormBean.puesto.salarioBase}" required="true" />
+					<p:message for="txtSalario"/>
+					<p:tooltip for="txtSalario" value="Salario Base para el puesto"/>
+
+					<p:outputLabel value="Función" />
+					<p:inputText id="txtFuncion" value="#{puestoFormBean.funcion.nombre}" maxlength="9" />
+					<p:tooltip for="txtFuncion" value="Nombre de la función para el puesto"/>
+					<h:column/>
+
+					<p:outputLabel value="Descripción" />
+					<p:inputTextarea id="txtDescripcion" value="#{puestoFormBean.funcion.descripcion}"
+						maxlength="100" />
+					<p:tooltip for="txtDescripcion" value="Descripción de la función del puesto"/>
+					<h:column/>
+
+					<p:commandButton value="Agregar Función"
+						actionListener="#{puestoFormBean.agregar()}" update="funciones" />
+
+					<p:dataList id="funciones" value="#{puestoFormBean.lstFunciones}"
+						var="fun" rows="5" paginator="true" emptyMessage="Sin funciones">
+						<p:outputLabel value="#{fun.nombre}" />
+						<p:commandLink value="Remover"
+							actionListener="#{puestoFormBean.remover(fun)}"
+							update="funciones" />
+					</p:dataList>
+				</h:panelGrid>
+
+				<p:separator/>
+
+				<p:commandButton value="Aceptar" update="@form"
+					actionListener="#{puestoFormBean.operar()}"
+					action="puesto?faces-redirect=true" />
+				<p:commandButton value="Cancelar" immediate="true"
+					action="puesto?faces-redirect=true" />
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

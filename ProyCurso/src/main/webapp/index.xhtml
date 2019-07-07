@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet name="estilos.css" library="css" />
+</h:head>
+<body class="resolucion">
+	<h:form>
+		<h2>Iniciar Sesión</h2>
+		
+		<p:ajaxStatus onstart="PF('wdlgCargando').show()"
+			onsuccess="PF('wdlgCargando').hide()" />
+
+		<p:dialog widgetVar="wdlgCargando" modal="true" draggable="false"
+			closable="false" resizable="false" showHeader="false">
+			<p:graphicImage library="images" name="cargando.gif" />
+		</p:dialog>
+
+		<p:commandButton value="Iniciar con Facebook"
+			action="#{indexBean.iniciarFb()}" />
+	</h:form>
+</body>
+</html>

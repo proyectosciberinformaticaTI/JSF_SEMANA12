@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+<title><ui:insert name="title">Gestor de Contratos</ui:insert></title>
+	<h:outputScript name="script.js" library="js" />
+	<h:outputScript name="calendar.js" library="js" />
+	<h:outputStylesheet name="estilos.css" library="css" />
+</h:head>
+
+<body class="resolucion">
+
+	<ui:insert name="header">
+		<p:ajaxStatus onstart="PF('wdlgCargando').show()" onsuccess="PF('wdlgCargando').hide()" />
+ 
+		<p:dialog widgetVar="wdlgCargando" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+		    <p:graphicImage library="images" name="cargando.gif" />
+		</p:dialog>		
+
+		<f:loadBundle basename="mensajes" var="msg"/>				
+		
+		<h:form id="frmMenu">
+			<p:menubar autoDisplay="false" style="width: 735px;">
+				<p:menuitem icon="ui-icon-home" value="Inicio" action="persona?faces-redirect=true"/>
+				<p:menuitem icon="ui-icon-person" value="Puestos" action="puesto?faces-redirect=true"/>
+				<p:menuitem icon="ui-icon-document" value="Contratos" action="contrato?faces-redirect=true"/>
+				<p:menuitem icon="ui-icon-person" value="Usuario" action="usuario?faces-redirect=true"/>
+				
+				<f:facet name="options">
+					<p:clock pattern="h:mm:ss a dd/MM/yyyy" mode="server" />
+				</f:facet>
+				
+			</p:menubar>
+			
+			<p:commandButton icon="ui-icon-gear" action="config?faces-redirect=true" style="height: 42px; float:right; margin-top: -42px;"/>
+		</h:form>
+		
+		<p:separator/>
+	</ui:insert>
+
+
+	<ui:insert name="content">
+
+	</ui:insert>
+
+	<ui:insert name="footer">
+		<p:cache>
+			<div>Desarrollado por Jaime Medina Delgado</div>
+			<div>Copyright © MitoCode, 20177. Todos los derechos reservados</div>
+			<div>
+				<a href="http://www.facebook.com/mitocode" target="_blank">Facebook</a>
+				<a href="http://www.youtube.com/mitocode" target="_blank">Youtube</a>
+				<a href="http://www.twitter.com/mitocode" target="_blank">Twitter</a>
+			</div>
+		</p:cache>
+	</ui:insert>
+
+
+</body>
+
+</html>

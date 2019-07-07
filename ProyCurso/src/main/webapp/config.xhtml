@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head>
+<body>
+<ui:composition template="/WEB-INF/templates/plantilla.xhtml" >
+<ui:define name="content">
+
+	<h2>Configuración - Variables del Sistema</h2>
+
+	<p:messages id="msj" autoUpdate="true" showDetail="true" globalOnly="true"/>
+
+	<h:form id="frm">	
+			
+		<p:fieldset id="pgConfig" legend="#{configBean.accion}" toggleable="true" >
+			<h:panelGrid id="pg" columns="3">				
+				<p:outputLabel for="txtNombreNuevo" value="Nombre" />
+				<p:inputText id="txtNombreNuevo" value="#{configBean.config.nombre}" required="true" requiredMessage="Debe ingresar nombre"/>
+				<p:message for="txtNombreNuevo"/>
+
+				<p:outputLabel for="txtValorNuevo" value="Valor" />
+				<p:inputText id="txtValorNuevo" value="#{configBean.config.valor}" required="true" requiredMessage="Debe ingresar valor"/>
+				<p:message for="txtValorNuevo"/>
+				
+				<p:commandButton value="Aceptar" actionListener="#{configBean.operar()}"  
+				  update="msj, tabla, pgConfig" />
+				<p:commandButton value="Cancelar" global="false" update="pgConfig" rendered="#{configBean.accion eq 'Modificar'}" actionListener="#{configBean.limpiarControles()}"/>
+			</h:panelGrid>
+		</p:fieldset>	
+				    
+		<p:dataTable id="tabla" value="#{configBean.lstConfig}" var="c">
+			<p:column headerText="id" style="width: 30px">
+				<p:outputLabel value="#{c.id}" />
+			</p:column>
+
+			<p:column headerText="Nombre">
+				<p:outputLabel value="#{c.nombre}" />
+			</p:column>
+
+			<p:column headerText="Valor">
+				<p:outputLabel value="#{c.valor}" />					
+			</p:column>
+			
+			<p:column style="width: 30px">
+				<p:commandLink actionListener="#{configBean.seleccionar(c)}" update="frm:pgConfig" 
+					process="@this" >
+					<p:graphicImage library="images" name="edit.jpg"/>
+				</p:commandLink>
+			</p:column>
+
+		</p:dataTable>
+
+	</h:form>
+	</ui:define>
+</ui:composition>
+</body>
+</html>

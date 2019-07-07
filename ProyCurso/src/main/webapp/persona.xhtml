@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	
+</h:head>
+<body>
+	<ui:composition template="/WEB-INF/templates/plantilla.xhtml" >
+
+	<ui:define name="content">
+		
+		<h2>Bienvenido #{personaBean.nombreUsuario}</h2>
+	
+		<p:messages id="msj" autoUpdate="true" showDetail="true" globalOnly="true"/>
+	
+		<h:form id="frm" enctype="multipart/form-data">
+			
+			<p:hotkey bind="alt+n" oncomplete="PF('wdlgPersona').show();" />
+			<p:hotkey bind="alt+a" actionListener="#{personaBean.operar()}" update="msjDlg, pgPersona"/>
+			
+			<!-- ONCLICK LUEGO ONCOMPLETE, agregar el limpiar controles al final luego de explicar lo del cdi y lo que se queda pegado -->
+			<p:commandButton icon="ui-icon-plus" value="Nuevo" oncomplete="PF('wdlgPersona').show();" widgetVar="wNuevo"
+				actionListener="#{personaBean.limpiarControles()}"  />
+
+			<p:dataTable id="dtPersonas" widgetVar="formatosTable" emptyMessage="#{msj.mensaje_vacio}"
+				value="#{personaBean.lstPersonas}"
+				var="per" rows="10" paginator="true"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="Página: ({currentPage}/{totalPages})"
+				rowsPerPageTemplate="5,10,15">
+
+				<f:facet name="header">
+					<p:outputPanel>
+						<h:outputText value="Buscar:" />
+						<p:inputText id="globalFilter"
+							onkeyup="filterAdvanced('formatosTable', this);"
+							style="width:150px" placeholder="Ingrese una palabra" />
+					</p:outputPanel>
+				</f:facet>
+
+				<p:column headerText="id" filterBy="#{per.idPersona}" filterStyle="display:none">
+					<p:outputLabel value="#{per.idPersona}" />
+				</p:column>
+
+				<p:column headerText="Nombres" filterBy="#{per.nombres}" filterStyle="display:none">
+					<p:outputLabel value="#{per.nombres}" />
+				</p:column>
+
+				<p:column headerText="Apellidos" filterBy="#{per.apellidos}" filterStyle="display:none">
+					<p:outputLabel value="#{per.apellidos}" />
+				</p:column>
+
+				<p:column style="width: 30px">
+					<p:commandLink actionListener="#{personaBean.seleccionar(per)}" process="@this" 
+						oncomplete="PF('wdlgPersona').show();" update="frm:dlgPersona">
+						<p:graphicImage library="images" name="edit.jpg" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+
+			<p:dialog id="dlgPersona" widgetVar="wdlgPersona" modal="true"
+				closable="false" closeOnEscape="true" resizable="false"
+				draggable="true" visible="#{facesContext.validationFailed}">
+								
+				<p:messages id="msjDlg" />				
+				
+				<h:panelGrid id="pgPersona" columns="2">
+					<h:panelGrid columns="2">
+						<p:outputLabel for="txtNombres" value="Nombres" />
+						<p:inputText id="txtNombres" value="#{personaBean.persona.nombres}" required="true" requiredMessage="Debe ingresar nombres">
+							<p:ajax event="keyup" global="false" partialSubmit="true" update="pgPersona, msjDlg"/>
+						</p:inputText>
+
+						<p:outputLabel for="txtApellidos" value="Apellidos" />
+						<p:inputText id="txtApellidos" value="#{personaBean.persona.apellidos}" required="true" requiredMessage="Debe ingresar apellidos" />
+
+						<p:outputLabel for="calFecha" value="Fecha Nacimiento" />
+						<p:calendar id="calFecha" value="#{personaBean.fechaSeleccionada}" locale="es" required="true" requiredMessage="Debe ingresar fecha de nacimiento"
+							pattern="dd/MM/yyyy" mask="99/99/9999" />
+
+						<p:outputLabel for="rdnSexo" value="Sexo" />
+						<p:selectOneRadio id="rdnSexo" value="#{personaBean.persona.sexo}" required="true" requiredMessage="Debe ingresar sexo">
+							<f:selectItem itemLabel="M" itemValue="M" />
+							<f:selectItem itemLabel="F" itemValue="F" />
+						</p:selectOneRadio>
+
+						<p:outputLabel value="Subir Foto" />
+						<p:fileUpload value="#{personaBean.foto}" mode="simple" />
+
+						<p:outputLabel value="Foto"
+							rendered="#{personaBean.persona.idPersona != 0}" />
+						<p:graphicImage value="/imagen/#{personaBean.persona.idPersona}"
+							width="120" height="120"
+							rendered="#{personaBean.persona.idPersona != 0}" />
+
+						<p:outputLabel for="txtDireccion" value="Dirección" />
+						<p:inputTextarea id="txtDireccion" value="#{personaBean.persona.direccion}" required="true" requiredMessage="Debe ingresar dirección"
+							counter="txtContador" maxlength="150"
+							counterTemplate="{0} caracteres restantes." autoResize="false" />
+
+						<h:column />
+						<h:outputText id="txtContador" />
+
+					</h:panelGrid>
+
+					<h:panelGrid columns="2">
+						<p:outputLabel value="Número" />
+						<p:inputText value="#{personaBean.telefono.numero}" maxlength="9" />
+						<p:commandButton value="Agregar" global="false"
+							actionListener="#{personaBean.agregar()}" update="telefonos" />
+
+						<p:dataList id="telefonos" value="#{personaBean.lstTelefono}"
+							var="tel" rows="5" paginator="true" emptyMessage="Sin números">
+							<p:outputLabel value="#{tel.numero}" />
+							<p:commandLink value="Remover"
+								actionListener="#{personaBean.remover(tel)}" update="telefonos" />
+						</p:dataList>
+					</h:panelGrid>
+				</h:panelGrid>
+
+				<h:panelGroup layout="block" style="float: right">
+					<p:commandButton value="Aceptar" update="msjDlg, pgPersona"
+						actionListener="#{personaBean.operar()}" ajax="false"/>
+					<p:commandButton value="Cancelar" immediate="true"
+						onclick="PF('wdlgPersona').hide();" />
+				</h:panelGroup>
+			</p:dialog>
+		</h:form>
+	</ui:define>
+	</ui:composition>
+</body>
+</html>
